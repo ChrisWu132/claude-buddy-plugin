@@ -39,6 +39,55 @@ to run `daemon/hook_bridge.py`.
 
 ---
 
+## Verify your install
+
+**1. The plugin is registered and enabled**
+
+```bash
+claude plugin list
+```
+
+You should see `claude-buddy-bridge@claude-buddy` with `Status: ✔ enabled`.
+
+**2. The bridge runs — no daemon or hardware needed**
+
+The bridge is *fail-open*: given any hook event it always replies `{}` and never blocks Claude
+Code, even when no daemon is running. Clone this repo and feed it a sample event:
+
+```bash
+# macOS / Linux
+echo '{}' | python daemon/hook_bridge.py
+echo '{"hook_event_name":"PreToolUse","tool_name":"Read","tool_input":{"file_path":"x"}}' | python daemon/hook_bridge.py
+```
+
+```powershell
+# Windows PowerShell
+'{}' | python daemon\hook_bridge.py
+```
+
+Each command should print `{}`. That means the forwarder loads and runs.
+
+**3. Validate the manifest (for contributors / before publishing)**
+
+```bash
+claude plugin validate .
+```
+
+Expected: `✔ Validation passed` (a couple of cosmetic warnings about description/author are fine).
+
+**4. Full hardware test — needs the daemon + a paired device**
+
+Install and start the daemon runtime from the main project
+([FreakStudioCN/MicroPython_Claude_Assistant](https://github.com/FreakStudioCN/MicroPython_Claude_Assistant)),
+then run any command in a Claude Code session — the device should change state as tools run.
+The main project ships a `claude-buddy-smoke` tool to confirm the daemon link **without** hardware.
+
+> Anonymous reachability (can a stranger install it?) is guaranteed by the repo being **public** —
+> verify with `git clone https://github.com/ChrisWu132/claude-buddy-plugin.git` from a machine with
+> no GitHub credentials; a successful clone means `claude plugin marketplace add` can fetch it too.
+
+---
+
 ## How it works
 
 `hooks/hooks.json` registers 8 Claude Code events:
