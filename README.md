@@ -30,9 +30,16 @@ the hardware simply shows nothing.
 ## Install
 
 ```bash
-claude plugin marketplace add ChrisWu132/claude-buddy-plugin
+claude plugin marketplace add https://github.com/ChrisWu132/claude-buddy-plugin.git
 claude plugin install claude-buddy-bridge@claude-buddy
 ```
+
+> **Use the full HTTPS `.git` URL above, not the `ChrisWu132/claude-buddy-plugin` shorthand.**
+> Claude Code resolves the `owner/repo` shorthand to **SSH** (`git@github.com:…`, port 22). If
+> SSH to GitHub is blocked on your network — common behind a proxy / in mainland China — you'll
+> see `SSH authentication failed` / `port 22: Connection refused`. The HTTPS URL uses port 443 and
+> works through proxies. (With a proxy, make sure your terminal's git traffic actually routes
+> through it, e.g. Clash TUN mode or `git config --global http.proxy`.)
 
 **Requirement:** Python 3 must be on `PATH`. The hook command invokes `pythonw` / `python`
 to run `daemon/hook_bridge.py`.
