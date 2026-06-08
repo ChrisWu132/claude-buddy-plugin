@@ -46,6 +46,42 @@ to run `daemon/hook_bridge.py`.
 
 ---
 
+## Local install (offline / unreliable proxy)
+
+If `marketplace add` over the network keeps failing or timing out (flaky VPN / proxy), get the
+repo onto the machine **once** by any means, then install from the local folder — this needs **no
+network at all**.
+
+**Step 1 — get the folder onto disk** (any one of):
+
+- `git clone https://github.com/ChrisWu132/claude-buddy-plugin.git`
+- Download the ZIP: open the [repo page](https://github.com/ChrisWu132/claude-buddy-plugin) →
+  **Code ▾ → Download ZIP** → unzip it
+- Copy the folder from another machine (USB / chat / shared drive) — it's only ~7 small text files
+
+**Step 2 — add the marketplace from the local path** (offline):
+
+```powershell
+# Windows PowerShell — use the absolute path to the unzipped folder
+claude plugin marketplace add C:\path\to\claude-buddy-plugin
+```
+
+```bash
+# macOS / Linux
+claude plugin marketplace add /path/to/claude-buddy-plugin
+```
+
+**Step 3 — install:**
+
+```bash
+claude plugin install claude-buddy-bridge@claude-buddy
+```
+
+> Keep the folder where it is — the marketplace is registered as a directory reference to that
+> path (`Source: Directory (...)`). Moving or deleting it later will break `marketplace update`.
+
+---
+
 ## Verify your install
 
 **1. The plugin is registered and enabled**
