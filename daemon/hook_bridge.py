@@ -386,6 +386,17 @@ def _call_daemon(envelope: dict) -> dict:
 
 
 def main():
+    # 交互式终端里直接运行(没有用管道喂 stdin)时,sys.stdin.read() 会一直阻塞
+    # 等待输入,容易被误以为程序卡死。这里检测到 TTY 就给出正确用法并退出。
+    # 真实场景下 Claude Code 总是通过管道传入 hook 事件(isatty 为 False),不受影响。
+    if sys.stdin.isatty():
+        sys.stderr.write(
+            "hook_bridge.py expects a hook-event JSON on stdin and is normally "
+            "invoked by Claude Code.\n"
+            "To test it by hand, pipe an event in, e.g.:\n"
+            "    '{}' | python daemon/hook_bridge.py\n"
+        )
+        return
     # 上限读 1MB:超大 tool_response (例如 Bash 长输出) 不该把 hook_bridge 撑爆,
     # 设备只能显几十字,后面又会再截 80 字,1MB 已经远超有用范围
     raw = sys.stdin.read(MAX_STDIN_BYTES).strip()
