@@ -95,7 +95,8 @@ You should see `claude-buddy-bridge@claude-buddy` with `Status: ✔ enabled`.
 **2. The bridge runs — no daemon or hardware needed**
 
 The bridge is *fail-open*: given any hook event it always replies `{}` and never blocks Claude
-Code, even when no daemon is running. Clone this repo and feed it a sample event:
+Code, even when no daemon is running. Clone this repo, `cd` into it, and feed it a sample event
+**from the repo root** (the commands below reference `daemon/hook_bridge.py` relative to it):
 
 ```bash
 # macOS / Linux
@@ -109,6 +110,10 @@ echo '{"hook_event_name":"PreToolUse","tool_name":"Read","tool_input":{"file_pat
 ```
 
 Each command should print `{}`. That means the forwarder loads and runs.
+
+> `hook_bridge.py` reads the hook event from **stdin** — always pipe input in as shown above.
+> Running it bare (`python daemon\hook_bridge.py` with no `… |` pipe) just prints a one-line usage
+> hint and exits, so it won't appear to hang waiting for input.
 
 **3. Validate the manifest (for contributors / before publishing)**
 
